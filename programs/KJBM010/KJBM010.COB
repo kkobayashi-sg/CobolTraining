@@ -72,11 +72,9 @@
            CLOSE ITF-FILE.
            CLOSE OTF-FILE.
 
-           DISPLAY "ITF-CNT:"ITF-CNT.           
-           DISPLAY "OTF-CNT:"OTF-CNT.
            MOVE 0 TO RETURN-CODE.
-           DISPLAY "*** KJBM010 ITF-REC: 999999999".
-           DISPLAY "*** KJBM010 OTF-REC: 999999999".
+           DISPLAY "*** KJBM010 ITF-REC:"ITF-CNT.
+           DISPLAY "*** KJBM010 OTF-REC:"OTF-CNT.
            DISPLAY "*** KJBM010 END ***".
            STOP RUN.
 
@@ -85,8 +83,10 @@
       *******************************************
            READ-RTN SECTION.
                READ ITF-FILE
-                   AT END MOVE 'Y' TO WK-EOF
-                   NOT AT END ADD 1 TO ITF-CNT
+                   AT END
+                       MOVE 'Y' TO WK-EOF
+                   NOT AT END
+                       ADD 1 TO ITF-CNT
                END-READ.
            EXT.
                EXIT.
