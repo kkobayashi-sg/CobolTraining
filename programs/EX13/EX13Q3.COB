@@ -20,12 +20,13 @@
        FILE SECTION.
        FD ITF-FILE.
        01 ITF-REC.
-           03 EMP-NO                   PIC X(4).
-           03 EMP-NAME                 PIC N(20).
-           03 EMP-JOINED-DATE          PIC 9(8).
+           03 GOODS-CODE                 PIC X(5).
+           03 GODDS-NAME                 PIC X(20).
+           03 GOODS-PRICE                PIC 9(8).
        
        WORKING-STORAGE SECTION.
        01 WK-EOF                       PIC X(1) VALUE 'N'.
+       01 WK-COUNT                     PIC 9(8).
        
 
        
@@ -39,11 +40,14 @@
            END-READ.
 
            PERFORM UNTIL WK-EOF = 'Y'
-               DISPLAY EMP-NO "Å@" EMP-JOINED-DATE
+               ADD 1 TO WK-COUNT
                READ ITF-FILE
                    AT END MOVE 'Y' TO WK-EOF
                END-READ
            END-PERFORM.
+
+           DISPLAY "TOTAL RECORDS:" WK-COUNT.
+
 
            CLOSE ITF-FILE.
            STOP RUN.
