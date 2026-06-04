@@ -1,10 +1,13 @@
        IDENTIFICATION DIVISION.
        PROGRAM-ID. KJBM010.
-      **************************************
-      *
-      *
-      **************************************
-
+      ******************************************************************
+      * システム名　　：研修
+      * サブシステム名：<サブシステム名>
+      * プログラム名　：<プログラム名>
+      * 作成日／作成者：2026/06/04　小林健太郎
+      * 変更日／変更者：
+      * 　　　変更内容：
+      ******************************************************************
 
        ENVIRONMENT DIVISION.
        INPUT-OUTPUT SECTION.
@@ -31,11 +34,17 @@
        WORKING-STORAGE SECTION.
            01 WK-EOF                       PIC X(1) VALUE 'N'.
            01 WK-COUNT                     PIC 9(5) VALUE ZERO.
+           01 ITF-CNT                    PIC 9(5) VALUE ZERO.
+           01 OTF-CNT                    PIC 9(5) VALUE ZERO.
 
        PROCEDURE DIVISION.
        MAIN-PARA.
+           DISPLAY "*** KJBM010 START ***".
+
            OPEN INPUT ITF-FILE.
            OPEN OUTPUT OTF-FILE.
+
+           MOVE SPACE TO OTF-REC.
 
            PERFORM READ-RTN.
 
@@ -55,19 +64,32 @@
                MOVE ZERO TO JF020-TANKA
                MOVE ZERO TO JF020-KINGAKU
                WRITE OTF-REC
-               PERFORM READ-RTN
+               ADD 1 TO OTF-CNT
+           PERFORM READ-RTN
            END-PERFORM.
 
-           WRITE OTF-REC.
 
            CLOSE ITF-FILE.
            CLOSE OTF-FILE.
+
+           DISPLAY "ITF-CNT:"ITF-CNT.           
+           DISPLAY "OTF-CNT:"OTF-CNT.
+           MOVE 0 TO RETURN-CODE.
+           DISPLAY "*** KJBM010 ITF-REC: 999999999".
+           DISPLAY "*** KJBM010 OTF-REC: 999999999".
+           DISPLAY "*** KJBM010 END ***".
            STOP RUN.
 
-
+      *******************************************
+      *READ文処理
+      *******************************************
            READ-RTN SECTION.
                READ ITF-FILE
                    AT END MOVE 'Y' TO WK-EOF
+                   NOT AT END ADD 1 TO ITF-CNT
                END-READ.
            EXT.
                EXIT.
+
+
+           
