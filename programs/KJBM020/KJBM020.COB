@@ -38,7 +38,7 @@
       ******************************************************************
        PROCEDURE DIVISION.
            PERFORM INIT-RTN.
-           PERFORM MAIN-RTN UNTIL ITF-END-FLG = "1".
+           PERFORM MAIN-RTN UNTIL ITF-END-FLG = "Y".
            PERFORM TERM-RTN.
            STOP RUN.
       ******************************************************************
@@ -59,7 +59,7 @@
        READ-RTN SECTION.
            READ ITF-FILE
                 AT END
-                   MOVE '1' TO ITF-END-FLG
+                   MOVE 'Y' TO ITF-END-FLG
                NOT AT END
                    ADD 1 TO ITF-CNT
            END-READ.
@@ -72,8 +72,7 @@
 
            MOVE ITF-REC TO OTF-REC.
       *受注日付(集団項目)
-           MOVE JF020-JUCHU-DATE OF ITF-REC 
-               TO S010-DATE OF KCBS010-P1.
+           MOVE JF020-JUCHU-DATE OF ITF-REC TO S010-DATE.
       *データ区分の判定
            IF NOT(JF020-DATA-KBN  OF OTF-REC = '1' 
                OR JF020-DATA-KBN OF OTF-REC = '9')
@@ -90,8 +89,7 @@
            IF S010-RCD = 'E'
                MOVE '1' TO JF020-ERR-KBN OF OTF-REC (3)
            ELSE
-               MOVE S010-DATE8 OF KCBS010-P1 
-                   TO JF020-JUCHU-DATE OF OTF-REC 
+               MOVE S010-DATE8 TO JF020-JUCHU-DATE OF OTF-REC 
            END-IF.
       *エラー区分(4)は未使用なのでスペースを入れる
            MOVE SPACE TO JF020-ERR-KBN OF OTF-REC (4).
