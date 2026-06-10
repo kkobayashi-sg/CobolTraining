@@ -42,7 +42,6 @@
        PROCEDURE DIVISION.
            PERFORM INIT-RTN.
            PERFORM MAIN-RTN UNTIL ITF-END-FLG = "Y".
-           PERFORM WRITE-RTN.
            PERFORM TERM-RTN.
            STOP RUN.
       ******************************************************************
@@ -117,6 +116,9 @@
       *I—¹ˆ—
       ******************************************************************
        TERM-RTN SECTION.
+           IF ITF-CNT >= 1
+               PERFORM WRITE-RTN
+           END-IF.
            CLOSE ITF-FILE.
            CLOSE OTF-FILE.
            MOVE 0 TO RETURN-CODE.
