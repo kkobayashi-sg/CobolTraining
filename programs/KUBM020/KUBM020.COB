@@ -82,7 +82,6 @@
                    PERFORM WRITE-RTN
                END-IF
        
-               MOVE SPACE TO OTF-REC
                MOVE ZERO TO UF020-KINGAKU
        
                MOVE UF010-SHOHIN-NO TO UF020-SHOHIN-NO
