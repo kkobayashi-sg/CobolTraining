@@ -96,7 +96,9 @@
            IF UF010-DATA-KBN = '1'
                ADD UF010-KINGAKU TO UF020-KINGAKU
            ELSE
-               SUBTRACT UF010-KINGAKU FROM UF020-KINGAKU
+               IF UF010-DATA-KBN = '9'
+                   SUBTRACT UF010-KINGAKU FROM UF020-KINGAKU
+               END-IF
            END-IF.
 
            PERFORM READ-RTN.
