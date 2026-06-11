@@ -1,0 +1,5 @@
+DATA_KBN,JUCHU_NO,JUCHU_Y1,JUCHU_Y2,JUCHU_MM,JUCHU_DD,SHOHIN_NO,SURYO,ERR_KBN_1,ERR_KBN_2,ERR_KBN_3,ERR_KBN_4,ERR_KBN_5,ERR_KBN_6,ERR_KBN_7,ERR_KBN_8,ERR_KBN_9,ERR_KBN_10,SHOHIN_MEI,TANKA,KINGAKU
+1,0001,20,26,06,01,10001,00010, , , , , , , , , , ,                    ,0.00,0
+1,0002,20,26,06,01,10001,00005, , , , ,1, , , , , ,                    ,0.00,0
+1,0003,20,26,06,01,10002,00020, , , , , ,1, , , , ,                    ,0.00,0
+1,0004,20,26,06,01,20001,00001, , , , , , , , , , ,                    ,0.00,0
