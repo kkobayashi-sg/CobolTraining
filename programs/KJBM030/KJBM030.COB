@@ -35,7 +35,6 @@
 
        WORKING-STORAGE SECTION.
            01 ITF-END-FLG                  PIC X(1) VALUE 'N'.
-           01 IMF-END-FLG                  PIC X(1) VALUE 'N'.
            01 ITF-CNT                    PIC 9(5) VALUE ZERO.
            01 IMF-CNT                    PIC 9(5) VALUE ZERO.
            01 OTF-CNT                    PIC 9(5) VALUE ZERO.
@@ -53,11 +52,9 @@
       ******************************************************************
        INIT-RTN SECTION.
            DISPLAY "*** KJBM030 START ***".
-
            OPEN INPUT ITF-FILE.
            OPEN INPUT IMF-FILE.
            OPEN OUTPUT OTF-FILE.
-
            PERFORM READ1-RTN.
            PERFORM READ2-RTN.
        EXT.
@@ -72,7 +69,7 @@
                NOT AT END
                    ADD 1 TO ITF-CNT
            END-READ.
-       READ1-EXT.
+       EXT.
            EXIT.
 
        READ2-RTN SECTION.
@@ -82,50 +79,39 @@
               NOT AT END
                ADD 1 TO IMF-CNT
            END-READ.
-       READ2-EXT.
+       EXT.
            EXIT.
       ******************************************************************
       *ï“èWèàóù
       ******************************************************************
        MAIN-RTN SECTION.
-
-       MOVE ITF-REC TO OTF-REC.
-
-       IF JF020-ERR-KBN OF ITF-REC (5) NOT = SPACE
-           PERFORM WRITE-RTN
-           PERFORM READ1-RTN
-       ELSE
-           EVALUATE TRUE
-               WHEN JF020-SHOHIN-NO OF ITF-REC = CFSHO-SHOHIN-NO
-                   MOVE CFSHO-SHOHIN-MEI TO JF020-SHOHIN-MEI OF OTF-REC
-                   MOVE CFSHO-TANKA TO JF020-TANKA OF OTF-REC
-                   IF JF020-ERR-KBN OF ITF-REC (6) = SPACE
-                       COMPUTE JF020-KINGAKU OF OTF-REC 
-                           = JF020-SURYO OF ITF-REC * CFSHO-TANKA
-                   ELSE
-                       MOVE 0 TO JF020-KINGAKU OF OTF-REC
-                   END-IF
-                   PERFORM WRITE-RTN
-                   PERFORM READ1-RTN
-               WHEN JF020-SHOHIN-NO OF ITF-REC < CFSHO-SHOHIN-NO
-                   MOVE '2' TO JF020-ERR-KBN OF OTF-REC (5)
-                   PERFORM WRITE-RTN
-                   PERFORM READ1-RTN
-               WHEN JF020-SHOHIN-NO OF ITF-REC > CFSHO-SHOHIN-NO
-                   PERFORM READ2-RTN
-           END-EVALUATE
-       END-IF.
-       
-
-
-
-      *     PERFORM WRITE-RTN.
-      *     PERFORM READ1-RTN.
-       MAIN-EXT.
+           MOVE ITF-REC TO OTF-REC.
+           IF JF020-ERR-KBN OF ITF-REC (5) NOT = SPACE
+               PERFORM WRITE-RTN
+               PERFORM READ1-RTN
+           ELSE
+               EVALUATE TRUE
+                   WHEN JF020-SHOHIN-NO OF ITF-REC = CFSHO-SHOHIN-NO
+                       MOVE CFSHO-SHOHIN-MEI TO JF020-SHOHIN-MEI OF OTF-REC
+                       MOVE CFSHO-TANKA TO JF020-TANKA OF OTF-REC
+                       IF JF020-ERR-KBN OF ITF-REC (6) = SPACE
+                           COMPUTE JF020-KINGAKU OF OTF-REC 
+                               = JF020-SURYO OF ITF-REC * CFSHO-TANKA
+                       ELSE
+                           MOVE 0 TO JF020-KINGAKU OF OTF-REC
+                       END-IF
+                       PERFORM WRITE-RTN
+                       PERFORM READ1-RTN
+                   WHEN JF020-SHOHIN-NO OF ITF-REC < CFSHO-SHOHIN-NO
+                       MOVE '2' TO JF020-ERR-KBN OF OTF-REC (5)
+                       PERFORM WRITE-RTN
+                       PERFORM READ1-RTN
+                   WHEN JF020-SHOHIN-NO OF ITF-REC > CFSHO-SHOHIN-NO
+                       PERFORM READ2-RTN
+               END-EVALUATE
+           END-IF.
+       EXT.
            EXIT.
-
-
-
       ******************************************************************
       *èoóÕèàóù
       ******************************************************************
