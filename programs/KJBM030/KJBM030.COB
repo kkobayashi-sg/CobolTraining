@@ -13,11 +13,11 @@
        INPUT-OUTPUT SECTION.
        FILE-CONTROL.
            SELECT ITF-FILE ASSIGN TO ITF
-               ORGANIZATION SEQUENTIAL.
+             ORGANIZATION SEQUENTIAL.
            SELECT IMF-FILE ASSIGN TO IMF
-               ORGANIZATION SEQUENTIAL.
+             ORGANIZATION SEQUENTIAL.
            SELECT OTF-FILE ASSIGN TO OTF
-               ORGANIZATION SEQUENTIAL.
+             ORGANIZATION SEQUENTIAL.
            
        DATA DIVISION.
        FILE SECTION.
@@ -55,28 +55,28 @@
            OPEN INPUT ITF-FILE.
            OPEN INPUT IMF-FILE.
            OPEN OUTPUT OTF-FILE.
-           PERFORM READ1-RTN.
-           PERFORM READ2-RTN.
+           PERFORM READ_ITF-RTN.
+           PERFORM READ_IMF-RTN.
        EXT.
            EXIT.
       ******************************************************************
       *ì¸óÕèàóù
       ******************************************************************
-       READ1-RTN SECTION.
+       READ_ITF-RTN SECTION.
            READ ITF-FILE
-                AT END
-                   MOVE 'Y' TO ITF-END-FLG
-               NOT AT END
-                   ADD 1 TO ITF-CNT
+             AT END
+               MOVE 'Y' TO ITF-END-FLG
+             NOT AT END
+               ADD 1 TO ITF-CNT
            END-READ.
        EXT.
            EXIT.
 
-       READ2-RTN SECTION.
+       READ_IMF-RTN SECTION.
            READ IMF-FILE
-              AT END
+             AT END
                MOVE HIGH-VALUE TO CFSHO-SHOHIN-NO
-              NOT AT END
+             NOT AT END
                ADD 1 TO IMF-CNT
            END-READ.
        EXT.
@@ -87,28 +87,28 @@
        MAIN-RTN SECTION.
            MOVE ITF-REC TO OTF-REC.
            IF JF020-ERR-KBN OF ITF-REC (5) NOT = SPACE
-               PERFORM WRITE-RTN
-               PERFORM READ1-RTN
+             PERFORM WRITE-RTN
+             PERFORM READ_ITF-RTN
            ELSE
-               EVALUATE TRUE
-                   WHEN JF020-SHOHIN-NO OF ITF-REC = CFSHO-SHOHIN-NO
-                       MOVE CFSHO-SHOHIN-MEI TO JF020-SHOHIN-MEI OF OTF-REC
-                       MOVE CFSHO-TANKA TO JF020-TANKA OF OTF-REC
-                       IF JF020-ERR-KBN OF ITF-REC (6) = SPACE
-                           COMPUTE JF020-KINGAKU OF OTF-REC 
-                               = JF020-SURYO OF ITF-REC * CFSHO-TANKA
-                       ELSE
-                           MOVE 0 TO JF020-KINGAKU OF OTF-REC
-                       END-IF
-                       PERFORM WRITE-RTN
-                       PERFORM READ1-RTN
-                   WHEN JF020-SHOHIN-NO OF ITF-REC < CFSHO-SHOHIN-NO
-                       MOVE '2' TO JF020-ERR-KBN OF OTF-REC (5)
-                       PERFORM WRITE-RTN
-                       PERFORM READ1-RTN
-                   WHEN JF020-SHOHIN-NO OF ITF-REC > CFSHO-SHOHIN-NO
-                       PERFORM READ2-RTN
-               END-EVALUATE
+             EVALUATE TRUE
+               WHEN JF020-SHOHIN-NO OF ITF-REC = CFSHO-SHOHIN-NO
+                 MOVE CFSHO-SHOHIN-MEI TO JF020-SHOHIN-MEI OF OTF-REC
+                 MOVE CFSHO-TANKA TO JF020-TANKA OF OTF-REC
+                 IF JF020-ERR-KBN OF ITF-REC (6) = SPACE
+                   COMPUTE JF020-KINGAKU OF OTF-REC 
+                     = JF020-SURYO OF ITF-REC * CFSHO-TANKA
+                 ELSE
+                   MOVE 0 TO JF020-KINGAKU OF OTF-REC
+                 END-IF
+                   PERFORM WRITE-RTN
+                   PERFORM READ_ITF-RTN
+                 WHEN JF020-SHOHIN-NO OF ITF-REC < CFSHO-SHOHIN-NO
+                   MOVE '2' TO JF020-ERR-KBN OF OTF-REC (5)
+                   PERFORM WRITE-RTN
+                   PERFORM READ_ITF-RTN
+                 WHEN JF020-SHOHIN-NO OF ITF-REC > CFSHO-SHOHIN-NO
+                   PERFORM READ_IMF-RTN
+             END-EVALUATE
            END-IF.
        EXT.
            EXIT.
