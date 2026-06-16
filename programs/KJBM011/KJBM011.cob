@@ -12,14 +12,14 @@
        ENVIRONMENT DIVISION.
        INPUT-OUTPUT SECTION.
        FILE-CONTROL.
-         SELECT OTF-FILE ASSIGN TO OTF
-               ORGANIZATION SEQUENTIAL.
+           SELECT OTF-FILE ASSIGN TO OTF
+                 ORGANIZATION SEQUENTIAL.
 
        DATA DIVISION.
        FILE SECTION.
-         FD OTF-FILE.
-           01 OTF-REC.
-         COPY KJCF020.
+       FD OTF-FILE.
+       01 OTF-REC.
+       COPY KJCF020.
 
        WORKING-STORAGE SECTION.
       **********************************************************************
@@ -91,14 +91,14 @@
            03  CMJUCHU-SURYO              PIC  9(05).
 
       *EXEC SQL DECLARE
-      *  JUCHU-CURSOR CURSOR FOR
-      *    SELECT *
-      *    FROM KCCMJUCHU
+      *    JUCHU-CURSOR CURSOR FOR
+      *      SELECT *
+      *      FROM KCCMJUCHU
       *END-EXEC.
 
-      *  EXEC SQL END DECLARE SECTION END-EXEC.
+      *EXEC SQL END DECLARE SECTION END-EXEC.
 
-      *  EXEC SQL INCLUDE SQLCA END-EXEC.
+      *EXEC SQL INCLUDE SQLCA END-EXEC.
        01 SQLCA.
            05 SQLSTATE PIC X(5).
               88  SQL-SUCCESS           VALUE '00000'.
@@ -123,49 +123,49 @@
       *メインルーチ
       ******************************************************************
        PROCEDURE DIVISION.
-         PERFORM INIT-RTN.
-         PERFORM WRITE-TO-FILE-RTN UNTIL FETCH-END = 'Y'.
-         PERFORM SUCCESSFUL-TERM-RTN.
-         STOP RUN.
+           PERFORM INIT-RTN.
+           PERFORM WRITE-TO-FILE-RTN UNTIL FETCH-END = 'Y'.
+           PERFORM SUCCESSFUL-TERM-RTN.
+           STOP RUN.
       ******************************************************************
       *
       ******************************************************************
        INIT-RTN SECTION.
-         DISPLAY "*** KJBM011 START ***".
+           DISPLAY "*** KJBM011 START ***".
 
-         OPEN OUTPUT OTF-FILE.
+           OPEN OUTPUT OTF-FILE.
 
-         PERFORM DBCONNECT-RTN.
-         PERFORM FETCH-RTN.
+           PERFORM DBCONNECT-RTN.
+           PERFORM FETCH-RTN.
        EXT.
-         EXIT.
+           EXIT.
       ******************************************************************
       *データベース
       ******************************************************************
        DBCONNECT-RTN       SECTION.
 
-         STRING
-           "DRIVER={Postgresql Unicode};"
-           "SERVER=db;"
-           "DBQ=postgres;"
-           "UID=postgres;"
-           "PWD=postgres;"
-           "CONNSETTINGS=SET CLIENT_ENCODING to 'SJIS';"
-           INTO DSN
-         END-STRING.
+           STRING
+             "DRIVER={Postgresql Unicode};"
+             "SERVER=db;"
+             "DBQ=postgres;"
+             "UID=postgres;"
+             "PWD=postgres;"
+             "CONNSETTINGS=SET CLIENT_ENCODING to 'SJIS';"
+             INTO DSN
+           END-STRING.
       ******************************************************************
-      *  EXEC SQL CONNECT TO :DSN END-EXEC.
+      *    EXEC SQL CONNECT TO :DSN END-EXEC.
            MOVE 256 TO SQL-LEN(1)
            CALL OCSQL    USING DSN
                                SQL-LEN(1)
                                SQLCA
            END-CALL
-                                          .
-         IF SQLCODE NOT = ZERO
-           PERFORM ERROR-RTN
-         END-IF.
+                                            .
+           IF SQLCODE NOT = ZERO
+             PERFORM ERROR-RTN
+           END-IF.
 
-      *  EXEC SQL OPEN JUCHU-CURSOR END-EXEC.
+      *    EXEC SQL OPEN JUCHU-CURSOR END-EXEC.
            IF SQL-PREP OF SQL-STMT-0 = "N"
                MOVE 0 TO SQL-COUNT
                CALL OCSQLPRE USING SQLV
@@ -175,22 +175,22 @@
            CALL OCSQLOCU USING SQL-STMT-0
                                SQLCA
            END-CALL
-                                            .
+                                              .
        EXT.
-         EXIT.
+           EXIT.
 
       ******************************************************************
       *目的のカーソル（テーブル）から1レコード
       ******************************************************************
        FETCH-RTN       SECTION.
-      *  EXEC SQL
-      *    FETCH JUCHU-CURSOR
-      *    INTO :CMJUCHU-DATA-KBN,
-      *         :CMJUCHU-JUCHU-NO,
-      *         :CMJUCHU-JUCHU-DATE,
-      *         :CMJUCHU-SHOHIN-NO,
-      *         :CMJUCHU-SURYO
-      *  END-EXEC.
+      *    EXEC SQL
+      *      FETCH JUCHU-CURSOR
+      *      INTO :CMJUCHU-DATA-KBN,
+      *           :CMJUCHU-JUCHU-NO,
+      *           :CMJUCHU-JUCHU-DATE,
+      *           :CMJUCHU-SHOHIN-NO,
+      *           :CMJUCHU-SURYO
+      *    END-EXEC.
            SET SQL-ADDR(1) TO ADDRESS OF
              SQL-VAR-0001
            MOVE "3" TO SQL-TYPE(1)
@@ -223,79 +223,80 @@
              MOVE SQL-VAR-0002 TO CMJUCHU-JUCHU-NO
              MOVE SQL-VAR-0003 TO CMJUCHU-SURYO
            END-IF
-                 .
+                   .
 
-         EVALUATE SQLCODE
-          WHEN 0
-            ADD 1 TO FETCH-CNT
-          WHEN 100
-            MOVE "Y" TO FETCH-END
-          WHEN OTHER
-            PERFORM ERROR-RTN
-         END-EVALUATE.
+           EVALUATE SQLCODE
+            WHEN 0
+              ADD 1 TO FETCH-CNT
+            WHEN 100
+              MOVE "Y" TO FETCH-END
+            WHEN OTHER
+              PERFORM ERROR-RTN
+           END-EVALUATE.
        EXT.
-         EXIT.
+           EXIT.
 
       ******************************************************************
       *処理結果をファイルに出
       ******************************************************************
        WRITE-TO-FILE-RTN       SECTION.
-         MOVE SPACE TO OTF-REC.
-         MOVE CMJUCHU-DATA-KBN TO JF020-DATA-KBN.
-         MOVE CMJUCHU-JUCHU-NO TO JF020-JUCHU-NO.
-         MOVE 00 TO JF020-JUCHU-Y1.
-         MOVE CMJUCHU-JUCHU-DATE TO JF020-JUCHU-DATE6.
-         MOVE CMJUCHU-SHOHIN-NO TO JF020-SHOHIN-NO.
-         MOVE CMJUCHU-SURYO TO JF020-SURYO.
-         MOVE SPACE TO JF020-ERR-KBN-TBL.
-         MOVE SPACE TO JF020-SHOHIN-MEI.
-         MOVE ZERO TO JF020-TANKA.
-         MOVE ZERO TO JF020-KINGAKU.
+           MOVE SPACE TO OTF-REC.
+           MOVE CMJUCHU-DATA-KBN TO JF020-DATA-KBN.
+           MOVE CMJUCHU-JUCHU-NO TO JF020-JUCHU-NO.
+           MOVE 00 TO JF020-JUCHU-Y1.
+           MOVE CMJUCHU-JUCHU-DATE TO JF020-JUCHU-DATE6.
+           MOVE CMJUCHU-SHOHIN-NO TO JF020-SHOHIN-NO.
+           MOVE CMJUCHU-SURYO TO JF020-SURYO.
+           MOVE SPACE TO JF020-ERR-KBN-TBL.
+           MOVE SPACE TO JF020-SHOHIN-MEI.
+           MOVE ZERO TO JF020-TANKA.
+           MOVE ZERO TO JF020-KINGAKU.
 
-         WRITE OTF-REC.
-         ADD 1 TO OTF-CNT.
+           WRITE OTF-REC.
+           ADD 1 TO OTF-CNT.
 
-         PERFORM FETCH-RTN.
+           PERFORM FETCH-RTN.
        EXT.
-         EXIT.
+           EXIT.
 
       ******************************************************************
       *問題なく処理が完了したときの終
       ******************************************************************
        SUCCESSFUL-TERM-RTN      SECTION.
-         PERFORM TERM-RTN.
+           PERFORM TERM-RTN.
        EXT.
-         EXIT.
+           EXIT.
 
       ******************************************************************
       *処理中にエラーが発生したときの終
       ******************************************************************
        ERROR-RTN      SECTION.
-         DISPLAY "!!! FETCHDB ABEND : DATABASE ACCESS ERROR !!!"
-         DISPLAY "SQLCODE = " SQLCODE.
-         DISPLAY "SQLERRMC = " SQLERRMC.
-         MOVE 9 TO RETURN-CODE.
-         PERFORM TERM-RTN.
+           DISPLAY "!!! FETCHDB ABEND : DATABASE ACCESS ERROR !!!"
+           DISPLAY "SQLCODE = " SQLCODE.
+           DISPLAY "SQLERRMC = " SQLERRMC.
+           MOVE 9 TO RETURN-CODE.
+           PERFORM TERM-RTN.
        EXT.
-         EXIT.
+           EXIT.
 
       ******************************************************************
       *共通の終
       ******************************************************************
        TERM-RTN SECTION.
-      *  EXEC SQL CLOSE JUCHU-CURSOR END-EXEC.
+      *    EXEC SQL CLOSE JUCHU-CURSOR END-EXEC.
            CALL OCSQLCCU USING SQL-STMT-0
                                SQLCA
-                                             .
-      *  EXEC SQL DISCONNECT ALL     END-EXEC.
+                                               .
+      *    EXEC SQL DISCONNECT ALL     END-EXEC.
            CALL OCSQLDIS USING SQLCA END-CALL
-                                             .
-         CLOSE OTF-FILE.
-         MOVE 0 TO RETURN-CODE.
-         DISPLAY "*** KJBM011 OTF-REC:"OTF-CNT" ***".
-         DISPLAY "*** KJBM011 END ***".
+                                               .
+           CLOSE OTF-FILE.
+           MOVE 0 TO RETURN-CODE.
+           DISPLAY "*** KJBM011 FETCH:"FETCH-CNT" ***".
+           DISPLAY "*** KJBM011 OTF-REC:"OTF-CNT" ***".
+           DISPLAY "*** KJBM011 END ***".
        EXT.
-         STOP RUN.
+           STOP RUN.
 
 
 
