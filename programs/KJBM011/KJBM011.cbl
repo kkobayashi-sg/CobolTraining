@@ -39,7 +39,11 @@
 
        EXEC SQL DECLARE 
            JUCHU-CURSOR CURSOR FOR
-             SELECT *
+             SELECT CMJUCHU_DATA_KBN,
+                    CMJUCHU_JUCHU_NO,
+                    CMJUCHU_JUCHU_DATE,
+                    CMJUCHU_SHOHIN_NO,
+                    CMJUCHU_SURYO
              FROM KCCMJUCHU
        END-EXEC.
 
@@ -49,11 +53,11 @@
 
       *
       ******************************************************************
-      *メインルーチン
+      *一連の処理
       ******************************************************************
        PROCEDURE DIVISION.
            PERFORM INIT-RTN. 
-           PERFORM WRITE-TO-FILE-RTN UNTIL FETCH-END = 'Y'.
+           PERFORM MAIN-RTN UNTIL FETCH-END = 'Y'.
            PERFORM SUCCESSFUL-TERM-RTN.
            STOP RUN.
       ******************************************************************
@@ -119,7 +123,7 @@
       ******************************************************************
       *処理結果をファイルに出力
       ******************************************************************
-       WRITE-TO-FILE-RTN       SECTION.
+       MAIN-RTN       SECTION.
            MOVE SPACE TO OTF-REC.
            MOVE CMJUCHU-DATA-KBN TO JF020-DATA-KBN.
            MOVE CMJUCHU-JUCHU-NO TO JF020-JUCHU-NO.
@@ -132,10 +136,17 @@
            MOVE ZERO TO JF020-TANKA.
            MOVE ZERO TO JF020-KINGAKU.
   
+           PERFORM WRITE-RTN.  
+           PERFORM FETCH-RTN.
+       EXT.
+           EXIT.
+
+      ******************************************************************
+      *
+      ******************************************************************
+       WRITE-RTN      SECTION.
            WRITE OTF-REC.
            ADD 1 TO OTF-CNT.
-  
-           PERFORM FETCH-RTN.
        EXT.
            EXIT.
 
@@ -143,6 +154,7 @@
       *問題なく処理が完了したときの終了処理
       ******************************************************************
        SUCCESSFUL-TERM-RTN      SECTION.
+           MOVE 0 TO RETURN-CODE.
            PERFORM TERM-RTN.
        EXT.
            EXIT.
@@ -153,7 +165,6 @@
        ERROR-RTN      SECTION.
            DISPLAY "!!! FETCHDB ABEND : DATABASE ACCESS ERROR !!!"
            DISPLAY "SQLCODE = " SQLCODE.
-           DISPLAY "SQLERRMC = " SQLERRMC.
            MOVE 9 TO RETURN-CODE.
            PERFORM TERM-RTN.
        EXT.
@@ -166,7 +177,6 @@
            EXEC SQL CLOSE JUCHU-CURSOR END-EXEC.
            EXEC SQL DISCONNECT ALL     END-EXEC.
            CLOSE OTF-FILE.
-           MOVE 0 TO RETURN-CODE.
            DISPLAY "*** KJBM011 FETCH:"FETCH-CNT" ***".
            DISPLAY "*** KJBM011 OTF-REC:"OTF-CNT" ***".
            DISPLAY "*** KJBM011 END ***".

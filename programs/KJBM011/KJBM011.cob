@@ -48,8 +48,10 @@
            05 SQL-PREP   PIC X VALUE "N".
            05 SQL-OPT    PIC X VALUE "C".
            05 SQL-PARMS  PIC S9(4) COMP-5 VALUE 0.
-           05 SQL-STMLEN PIC S9(4) COMP-5 VALUE 23.
-           05 SQL-STMT   PIC X(23) VALUE "SELECT * FROM KCCMJUCHU".
+           05 SQL-STMLEN PIC S9(4) COMP-5 VALUE 106.
+           05 SQL-STMT   PIC X(106) VALUE "SELECT CMJUCHU_DATA_KBN,CMJUC
+      -    "HU_JUCHU_NO,CMJUCHU_JUCHU_DATE,CMJUCHU_SHOHIN_NO,CMJUCHU_SUR
+      -    "YO FROM KCCMJUCHU".
            05 SQL-CNAME  PIC X(12) VALUE "JUCHU-CURSOR".
            05 FILLER     PIC X VALUE LOW-VALUE.
       **********************************************************************
@@ -92,7 +94,11 @@
 
       *EXEC SQL DECLARE
       *    JUCHU-CURSOR CURSOR FOR
-      *      SELECT *
+      *      SELECT CMJUCHU_DATA_KBN,
+      *             CMJUCHU_JUCHU_NO,
+      *             CMJUCHU_JUCHU_DATE,
+      *             CMJUCHU_SHOHIN_NO,
+      *             CMJUCHU_SURYO
       *      FROM KCCMJUCHU
       *END-EXEC.
 
@@ -120,11 +126,11 @@
 
       *
       ******************************************************************
-      *メインルーチ
+      *一連
       ******************************************************************
        PROCEDURE DIVISION.
            PERFORM INIT-RTN.
-           PERFORM WRITE-TO-FILE-RTN UNTIL FETCH-END = 'Y'.
+           PERFORM MAIN-RTN UNTIL FETCH-END = 'Y'.
            PERFORM SUCCESSFUL-TERM-RTN.
            STOP RUN.
       ******************************************************************
@@ -239,7 +245,7 @@
       ******************************************************************
       *処理結果をファイルに出
       ******************************************************************
-       WRITE-TO-FILE-RTN       SECTION.
+       MAIN-RTN       SECTION.
            MOVE SPACE TO OTF-REC.
            MOVE CMJUCHU-DATA-KBN TO JF020-DATA-KBN.
            MOVE CMJUCHU-JUCHU-NO TO JF020-JUCHU-NO.
@@ -252,10 +258,17 @@
            MOVE ZERO TO JF020-TANKA.
            MOVE ZERO TO JF020-KINGAKU.
 
+           PERFORM WRITE-RTN.
+           PERFORM FETCH-RTN.
+       EXT.
+           EXIT.
+
+      ******************************************************************
+      *
+      ******************************************************************
+       WRITE-RTN      SECTION.
            WRITE OTF-REC.
            ADD 1 TO OTF-CNT.
-
-           PERFORM FETCH-RTN.
        EXT.
            EXIT.
 
@@ -263,6 +276,7 @@
       *問題なく処理が完了したときの終
       ******************************************************************
        SUCCESSFUL-TERM-RTN      SECTION.
+           MOVE 0 TO RETURN-CODE.
            PERFORM TERM-RTN.
        EXT.
            EXIT.
@@ -273,7 +287,6 @@
        ERROR-RTN      SECTION.
            DISPLAY "!!! FETCHDB ABEND : DATABASE ACCESS ERROR !!!"
            DISPLAY "SQLCODE = " SQLCODE.
-           DISPLAY "SQLERRMC = " SQLERRMC.
            MOVE 9 TO RETURN-CODE.
            PERFORM TERM-RTN.
        EXT.
@@ -291,7 +304,6 @@
            CALL OCSQLDIS USING SQLCA END-CALL
                                                .
            CLOSE OTF-FILE.
-           MOVE 0 TO RETURN-CODE.
            DISPLAY "*** KJBM011 FETCH:"FETCH-CNT" ***".
            DISPLAY "*** KJBM011 OTF-REC:"OTF-CNT" ***".
            DISPLAY "*** KJBM011 END ***".
