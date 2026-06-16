@@ -55,6 +55,8 @@
 | ドキュメント | ツール名 | 説明 |
 | ------------ | -------- | ---- |
 | [UTIL_GCSORT.md](UTIL_GCSORT.md) | GCSORT | ソートユーティリティ（MFSORTサブセット） |
+| [UTIL_COBDT.md](UTIL_COBDT.md) | cobdt | テストデータ作成ユーティリティ |
+| [UTL_PYCOBDATA_TOOLS.md](UTL_PYCOBDATA_TOOLS.md) | Pythonデータツール | CSVからのデータ作成・データ確認・コピーブック解析スクリプト群 |
 
 ---
 

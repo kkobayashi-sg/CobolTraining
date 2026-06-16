@@ -8,8 +8,8 @@
       ******************************************************************
       *    KCCMJUCHU: éÛíçÉ}ÉXÉ^
       ******************************************************************
-       01  CMJUCHU-DATA-KBN           PIC  9(01).
-       01  CMJUCHU-JUCHU-NO           PIC  9(04).
-       01  CMJUCHU-JUCHU-DATE         PIC  X(06).
-       01  CMJUCHU-SHOHIN-NO          PIC  X(05).
-       01  CMJUCHU-SURYO              PIC  9(05).
+           03  CMJUCHU-DATA-KBN           PIC  9(01).
+           03  CMJUCHU-JUCHU-NO           PIC  9(04).
+           03  CMJUCHU-JUCHU-DATE         PIC  X(06).
+           03  CMJUCHU-SHOHIN-NO          PIC  X(05).
+           03  CMJUCHU-SURYO              PIC  9(05).

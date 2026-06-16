@@ -3,6 +3,8 @@ nav:
     - 'ライセンス': license..md
     - '実習ルール': RULES.md
     - 'ジョブフロー': FLOW_KJJD010.md
+    - 'JOBフロースクリプト設計書':
+        - 'KJJD010 - 受注データ更新': JOB_KJJD010.md
     - 'ファイルフォーマット':
         - 'KJCF010 - 受注データ': FF_KJCF010.md
         - 'KJCF020 - 受注チェックファイル': FF_KJCF020.md
@@ -11,6 +13,7 @@ nav:
         - 'KCCFSHO - 商品マスタSAMファイル': FF_KCCFSHO.md
     - 'プログラム仕様書':
         - 'KJBM010 - 受注チェックファイル作成': PRG_KJBM010.md
+        - 'KJBM011 - 受注チェックファイル作成(DB入力版)': PRG_KJBM011.md
         - 'KJBM020 - 受注データ形式チェック': PRG_KJBM020.md
         - 'KJBM030 - 受注データ商品番号チェック': PRG_KJBM030.md
         - 'KJBM050 - 受注データ振り分け': PRG_KJBM050.md
@@ -21,5 +24,8 @@ nav:
         - 'KCBS010 - 日付チェック': SUB_KCBS010.md
     - 'ユーティリティ':
         - 'GCSORT - ソートユーティリティ': UTIL_GCSORT.md
+        - 'cobdt - テストデータ作成ユーティリティ': UTIL_COBDT.md
+        - 'Pythonデータツール - データ作成/確認/解析': UTL_PYCOBDATA_TOOLS.md
     - 'テーブル定義':
+        - 'KCCMJUCHU - 受注マスタ': TBL_KCCMJUCHU.md
         - 'KCCMURIAGE - 売上マスタ': TBL_KCCMURIAGE.md
