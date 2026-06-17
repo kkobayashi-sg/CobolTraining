@@ -65,6 +65,7 @@
        01 OTF-CNT      PIC 9(9) PACKED-DECIMAL VALUE 0.
        01 FETCH-CNT     PIC 9(9) PACKED-DECIMAL VALUE 0.
        01 FETCH-END    PIC X VALUE 'N'.
+       01 ERR-FLG      PIC X VALUE 'N'.
       ******************************************************************
       *データベースアクセス関連
       *※ＣＯＢＯＬ⇔ＤＢする変数はDECLARE SECTIONで行
@@ -288,6 +289,7 @@
            DISPLAY "!!! FETCHDB ABEND : DATABASE ACCESS ERROR !!!"
            DISPLAY "SQLCODE = " SQLCODE.
            MOVE 9 TO RETURN-CODE.
+           MOVE 'Y' TO ERR-FLG.
            PERFORM TERM-RTN.
        EXT.
            EXIT.
@@ -307,6 +309,9 @@
            DISPLAY "*** KJBM011 FETCH:"FETCH-CNT" ***".
            DISPLAY "*** KJBM011 OTF-REC:"OTF-CNT" ***".
            DISPLAY "*** KJBM011 END ***".
+           IF ERR-FLG = 'Y'
+               MOVE 9 TO RETURN-CODE
+           END-IF.
        EXT.
            STOP RUN.
 
