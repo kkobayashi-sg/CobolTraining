@@ -14,31 +14,15 @@
        01 QUOTIENT         PIC 9(4).
        01 URU-REM          PIC 9(4).
        01 URUDOSHI         PIC X VALUE 'N'.
-       01 IN-LEN         PIC 9(1).
 
        LINKAGE SECTION.
            COPY KCBS010P.
 
        PROCEDURE DIVISION USING KCBS010-P1.
 
-           MOVE ZERO TO IN-LEN.
            MOVE SPACE TO S010-RCD.
 
-           INSPECT S010-DATE TALLYING IN-LEN
-               FOR CHARACTERS BEFORE INITIAL SPACE
-
-           DISPLAY "IN-LEN: " IN-LEN.
-
-      *****ì¸óÕï∂éöêîÇ™6Ç©8Ç©Ç≈èàóùÇï™ÇØÇÈ
-           IF IN-LEN = 6
-             DISPLAY "INPUT: " S010-DATE
-             MOVE S010-DATE TO S010-DATE6
-             MOVE 00 TO S010-P1-Y1
-           ELSE
-             IF IN-LEN = 8
-                 DISPLAY "INPUT: " S010-DATE
-             END-IF
-           END-IF.
+           MOVE 00 TO S010-P1-Y1.
 
       *****S010-DATEÇ™êîéöÇ≈Ç»ÇØÇÍÇŒÅAS010-RCDÇ…'E'Çì¸ÇÍÇÈ
            IF S010-DATE NOT NUMERIC
@@ -112,7 +96,6 @@
            END-IF.
 
 
-           DISPLAY "URUDOSHI: " URUDOSHI.
 
 
  
