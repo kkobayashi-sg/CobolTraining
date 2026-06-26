@@ -6,15 +6,15 @@ SCRIPTDIR=$(cd $(dirname $0); pwd)
 DATADIR="${SCRIPTDIR}/../data"
 
 export ITF="${DATADIR}/KJJD010I.txt"
-export OTF="${DATADIR}/KJJD010O.dat"
+export OTF="${DATADIR}/KJBM010O.dat"
 
 "${SCRIPTDIR}/KJBM010/KJBM010" | iconv -f cp932
 
-export ITF="${DATADIR}/KJJD010O.dat"
+export ITF="${DATADIR}/KJBM010O.dat"
 export OTF="${DATADIR}/KJBM020O.dat"
 export COB_LIBRARY_PATH="${SCRIPTDIR}/KCBS010"
 
-"${SCRIPTDIR}/KJBM020/KJBM020"
+"${SCRIPTDIR}/KJBM020/KJBM020" | iconv -f cp932
 
 CTRLFILE=$(mktemp)
 trap "rm -f ${CTRLFILE}" EXIT
@@ -38,12 +38,12 @@ export ITF="${DATADIR}/KJBM030O.dat"
 export OTF1="${DATADIR}/KJBM050O1.dat"
 export OTF2="${DATADIR}/KJBM050O2.dat"
 
-"${SCRIPTDIR}/KJBM050/KJBM050"
+"${SCRIPTDIR}/KJBM050/KJBM050" | iconv -f cp932
 
 export ITF="${DATADIR}/KJBM050O1.dat"
 export OTF="${DATADIR}/KUBM010O.dat"
 
-"${SCRIPTDIR}/KUBM010/KUBM010"
+"${SCRIPTDIR}/KUBM010/KUBM010" | iconv -f cp932
 
 CTRLFILE=$(mktemp)
 trap "rm -f ${CTRLFILE}" EXIT
@@ -60,5 +60,5 @@ gcsort TAKE ${CTRLFILE}
 export ITF="${DATADIR}/SORT20.dat"
 export OTF="${DATADIR}/KUBM020O.dat"
 
-"${SCRIPTDIR}/KUBM020/KUBM020"
+"${SCRIPTDIR}/KUBM020/KUBM020" | iconv -f cp932
 
